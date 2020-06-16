@@ -25,16 +25,16 @@ Use one of the several ways of running a Spring Boot application. Below are just
  * client: testjwtclientid
  * secret: XY7kmzoNzl100
  * Non-admin username and password: john.doe and jwtpass
- * Admin user: admin.admin and jwtpass
+ * Admin employee: admin.admin and jwtpass
  * Example of resource accessible to all authenticated users:  http://localhost:8080/springjwt/cities
- * Example of resource accessible to only an admin user:  http://localhost:8080/springjwt/users
+ * Example of resource accessible to only an admin employee:  http://localhost:8080/springjwt/users
 
  1. Generate an access token
 
    Use the following generic command to generate an access token:
-   `$ curl client:secret@localhost:8080/oauth/token -d grant_type=password -d username=user -d password=pwd`
+   `$ curl client:secret@localhost:8080/oauth/token -d grant_type=password -d username=employee -d password=pwd`
 
-   For this specific application, to generate an access token for the non-admin user john.doe, run:
+   For this specific application, to generate an access token for the non-admin employee john.doe, run:
    `$ curl testjwtclientid:XY7kmzoNzl100@localhost:8080/oauth/token -d grant_type=password -d username=john.doe -d password=jwtpass`
     You'll receive a response similar to below
 
@@ -91,9 +91,9 @@ Use one of the several ways of running a Spring Boot application. Below are just
           }
         ]`
 
-    * Access content available only to an admin user
+    * Access content available only to an admin employee
 
-       As with the previous example first generate an access token for the admin user with the credentials provided above then run
+       As with the previous example first generate an access token for the admin employee with the credentials provided above then run
            `curl  http://localhost:8080/springjwt/users -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsidGVzdGp3dHJlc291cmNlaWQiXSwidXNlcl9uYW1lIjoiYWRtaW4uYWRtaW4iLCJzY29wZSI6WyJyZWFkIiwid3JpdGUiXSwiZXhwIjoxNDk0NDU0OTIzLCJhdXRob3JpdGllcyI6WyJTVEFOREFSRF9VU0VSIiwiQURNSU5fVVNFUiJdLCJqdGkiOiIyMTAzMjRmMS05MTE0LTQ1NGEtODRmMy1hZjUzZmUxNzdjNzIiLCJjbGllbnRfaWQiOiJ0ZXN0and0Y2xpZW50aWQifQ.OuprVlyNnKuLkoQmP8shP38G3Hje91GBhu4E0HD2Fes" `
            The result will be:
            `
