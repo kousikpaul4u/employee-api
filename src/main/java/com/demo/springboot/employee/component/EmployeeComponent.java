@@ -96,4 +96,17 @@ public class EmployeeComponent {
 
     }
 
+    public void delete(Long id) {
+
+        try {
+            genericService.delete(id);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            LOG.error("Failed deleting employee by id: {} with error: {} {}", id, e, e.getMessage());
+            throw new ComponentException(StatusConstants.HttpConstants.FAILED_TO_REGISTER_NEW_EMPLOYEE);
+        }
+
+    }
+
 }

@@ -16,4 +16,6 @@ public interface GenericService {
 
     void update(Employee employee);
 
+    void delete(Long id);
+
 }

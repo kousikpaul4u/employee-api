@@ -1,0 +1,23 @@
+security:
+  encoding-strength: 256
+  jwt:
+    client-id: testjwtclientid
+    client-secret: XY7kmzoNzl100
+    grant-type: password
+    resource-ids: testjwtresourceid
+    scope-read: read
+    scope-write: write
+  oauth2:
+    resource:
+      filter-order: 3
+  security-realm: Spring Boot JWT Example Realm
+  signing-key: MaYzkSjmkzPC57L
+
+spring:
+  application:
+    name: employee-service-api
+    profiles:
+      active: "swagger"
+  h2:
+    console:
+      enabled: true

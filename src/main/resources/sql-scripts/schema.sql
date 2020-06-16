@@ -13,6 +13,9 @@ CREATE TABLE employee (
   last_name varchar(255) NOT NULL,
   password varchar(255) NOT NULL,
   username varchar(255) NOT NULL,
+  registered_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  active_status varchar(10) NOT NULL DEFAULT 'active',
+  deleted_date timestamp DEFAULT NULL,
   PRIMARY KEY (id)
 );
 

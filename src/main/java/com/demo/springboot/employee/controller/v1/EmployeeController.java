@@ -9,6 +9,7 @@ import com.demo.springboot.employee.model.request.UpdateEmployeeRequest;
 import com.demo.springboot.employee.model.response.EmployeeListResponse;
 import com.demo.springboot.employee.model.response.EmployeeResponse;
 import com.demo.springboot.employee.model.response.Response;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ public class EmployeeController implements ControllerSupport {
     @GetMapping(value = "/employees")
     @ApiOperation(value = "Get all employees", notes = "Possible response codes: 0, 35001, 35999")
     @PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
+    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public Response<EmployeeListResponse> getAllEmployees(HttpServletResponse response) {
 
         try {
@@ -51,6 +53,7 @@ public class EmployeeController implements ControllerSupport {
     @GetMapping(value = "/employee/{id}")
     @ApiOperation(value = "Get all employee", notes = "Possible response codes: 0, 35001, 35999")
     @PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
+    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public Response<EmployeeResponse> getEmployeeById(@PathVariable Long id, HttpServletResponse response) {
 
         try {
@@ -74,6 +77,7 @@ public class EmployeeController implements ControllerSupport {
     @PostMapping(value = "/employee")
     @ApiOperation(value = "Register one employee", notes = "Possible response codes: 0, 35001, 35999")
     @PreAuthorize("hasAuthority('ADMIN_USER')")
+    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public Response registerEmployee(@RequestBody RegisterEmployeeRequest registerEmployeeRequest, HttpServletResponse response) {
 
         try {
@@ -92,8 +96,9 @@ public class EmployeeController implements ControllerSupport {
     }
 
     @PutMapping(value = "/employee")
-    @ApiOperation(value = "Update one employee information", notes = "Possible response codes: 0, 35001, 35999")
+    @ApiOperation(value = "Update employee information", notes = "Possible response codes: 0, 35001, 35999")
     @PreAuthorize("hasAuthority('ADMIN_USER')")
+    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public Response updateEmployee(@RequestBody UpdateEmployeeRequest updateEmployeeRequest, HttpServletResponse response) {
 
         try {
@@ -109,6 +114,30 @@ public class EmployeeController implements ControllerSupport {
             return serverError(e.getStatus(), response);
         } catch (Exception e) {
             LOG.error("Failed updating employee information with error: {} {}", e, e.getMessage());
+            return serverError(response);
+        }
+
+    }
+
+    @DeleteMapping(value = "/employee/{id}")
+    @ApiOperation(value = "Delete employee data", notes = "Possible response codes: 0, 35001, 35999")
+    @PreAuthorize("hasAuthority('ADMIN_USER')")
+    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
+    public Response deleteEmployee(@PathVariable Long id, HttpServletResponse response) {
+
+        try {
+            LOG.info("Start deleting employee with id: {}", id);
+            employeeComponent.delete(id);
+            LOG.info("Done deleting employee information");
+            return success();
+        } catch (ComponentException e) {
+            LOG.error("Failed deleting employee information with error: {} {}", e, e.getMessage());
+            return serverError(e.getStatus(), response);
+        } catch (ServiceException e) {
+            LOG.error("Failed deleting employee information with error: {} {}", e, e.getMessage());
+            return serverError(e.getStatus(), response);
+        } catch (Exception e) {
+            LOG.error("Failed deleting employee information with error: {} {}", e, e.getMessage());
             return serverError(response);
         }
 

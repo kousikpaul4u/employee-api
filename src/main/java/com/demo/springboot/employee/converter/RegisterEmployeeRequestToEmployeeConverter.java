@@ -1,5 +1,6 @@
 package com.demo.springboot.employee.converter;
 
+import com.demo.springboot.employee.constant.ActiveStatus;
 import com.demo.springboot.employee.domain.Employee;
 import com.demo.springboot.employee.model.request.RegisterEmployeeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class RegisterEmployeeRequestToEmployeeConverter implements Converter<Reg
                         .map(role -> roleRequestToRoleEntityConverter.convert(role))
                         .collect(Collectors.toList())
                 )
+                .activeStatus(ActiveStatus.ACTIVE.getDesc())
                 .build();
 
         return employee;

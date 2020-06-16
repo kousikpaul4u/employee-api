@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
@@ -32,6 +34,15 @@ public class Employee {
 
     @Column(name = "last_name")
     private String lastName;
+
+    @Column(name= "active_status")
+    private String activeStatus;
+
+    @Column(name= "registered_date", insertable = false, updatable = false)
+    private Timestamp registeredDate;
+
+    @Column(name= "deleted_date")
+    private Timestamp deletedDate;
 
     /**
      * Roles are being eagerly loaded here because
