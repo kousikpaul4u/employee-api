@@ -1,7 +1,7 @@
 package com.demo.springboot.employee.service.impl;
 
 import com.demo.springboot.employee.domain.Employee;
-import com.demo.springboot.employee.repository.UserRepository;
+import com.demo.springboot.employee.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,21 +12,22 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class AppUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
+    private EmployeeRepository employeeRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        Employee employee = userRepository.findByUsername(s);
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        Optional<Employee> employeeOptional = employeeRepository.findByUsername(userName);
 
-        if(employee == null) {
-            throw new UsernameNotFoundException(String.format("The username %s doesn't exist", s));
+        if(!employeeOptional.isPresent()) {
+            throw new UsernameNotFoundException(String.format("The username %s doesn't exist", userName));
         }
-
+        Employee employee = employeeOptional.get();
         List<GrantedAuthority> authorities = new ArrayList<>();
         employee.getRoles().forEach(role -> {
             authorities.add(new SimpleGrantedAuthority(role.getRoleName()));

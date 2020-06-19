@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface UserRepository extends CrudRepository<Employee, Long> {
+public interface EmployeeRepository extends CrudRepository<Employee, Long> {
 
-    Employee findByUsername(String username);
+    Optional<Employee> findByUsername(String username);
 
     @Query("SELECT u FROM Employee u WHERE u.activeStatus = 'active'")
-    List<Employee> findAllActiveUsers();
+    List<Employee> findAllActiveEmployees();
 
 }

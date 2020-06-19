@@ -4,7 +4,7 @@ import com.demo.springboot.employee.constant.ActiveStatus;
 import com.demo.springboot.employee.constant.StatusConstants;
 import com.demo.springboot.employee.domain.Employee;
 import com.demo.springboot.employee.exception.ServiceException;
-import com.demo.springboot.employee.repository.UserRepository;
+import com.demo.springboot.employee.repository.EmployeeRepository;
 import com.demo.springboot.employee.service.GenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,28 +19,37 @@ import java.util.Optional;
 public class GenericServiceImpl implements GenericService {
 
     @Autowired
-    private UserRepository userRepository;
+    private EmployeeRepository employeeRepository;
 
     @Override
-    public Optional<Employee> findById(Long id) {
-        return userRepository.findById(id);
+    public Optional<Employee> findByUserName(String username) {
+        return employeeRepository.findByUsername(username);
     }
 
     @Override
-    public List<Employee> findAllUsers() {
-        return userRepository.findAllActiveUsers();
+    public Optional<Employee> findById(Long id) {
+        return employeeRepository.findById(id);
+    }
+
+    @Override
+    public List<Employee> findAll() {
+        return employeeRepository.findAllActiveEmployees();
     }
 
     @Override
     public void register(Employee employee) {
-        userRepository.save(employee);
+        Optional<Employee> employeeOptional = findByUserName(employee.getUsername());
+        if(employeeOptional.isPresent()) {
+            throw new ServiceException(StatusConstants.HttpConstants.USERNAME_IS_ALREADY_EXIST);
+        }
+        employeeRepository.save(employee);
     }
 
     @Override
     public void update(Employee employee) {
         Optional<Employee> employeeOptional = findById(employee.getId());
         if(employeeOptional.isPresent()) {
-            userRepository.save(employee);
+            employeeRepository.save(employee);
         } else {
             throw new ServiceException(StatusConstants.HttpConstants.EMPLOYEE_ID_IS_NOT_FOUND);
         }
@@ -53,7 +62,7 @@ public class GenericServiceImpl implements GenericService {
             Employee employee = employeeOptional.get();
             employee.setActiveStatus(ActiveStatus.INACTIVE.getDesc());
             employee.setDeletedDate(new Timestamp(new Date().getTime()));
-            userRepository.save(employee);
+            employeeRepository.save(employee);
         } else {
             throw new ServiceException(StatusConstants.HttpConstants.EMPLOYEE_ID_IS_NOT_FOUND);
         }

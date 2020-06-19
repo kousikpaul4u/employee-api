@@ -26,7 +26,7 @@ public class RegisterEmployeeRequestToEmployeeConverter implements Converter<Reg
                 .firstName(registerEmployeeRequest.getFirstName())
                 .lastName(registerEmployeeRequest.getLastName())
                 .password(passwordEncoder.encode(registerEmployeeRequest.getPassword()))
-                .username(registerEmployeeRequest.getUserName())
+                .username(registerEmployeeRequest.getUsername())
                 .roles(registerEmployeeRequest.getRoles()
                         .stream()
                         .map(role -> roleRequestToRoleEntityConverter.convert(role))

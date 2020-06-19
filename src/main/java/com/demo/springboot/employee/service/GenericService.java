@@ -8,9 +8,11 @@ import java.util.Optional;
 
 public interface GenericService {
 
+    Optional<Employee> findByUserName(String username);
+
     Optional<Employee> findById(Long id);
 
-    List<Employee> findAllUsers();
+    List<Employee> findAll();
 
     void register(Employee employee);
 

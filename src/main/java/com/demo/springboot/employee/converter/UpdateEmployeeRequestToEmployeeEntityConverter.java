@@ -22,7 +22,7 @@ public class UpdateEmployeeRequestToEmployeeEntityConverter implements Converter
     public Employee convert(UpdateEmployeeRequest updateEmployeeRequest) {
         Employee employee = Employee.builder()
                 .id(updateEmployeeRequest.getId())
-                .username(updateEmployeeRequest.getUserName())
+                .username(updateEmployeeRequest.getUsername())
                 .password(passwordEncoder.encode(updateEmployeeRequest.getPassword()))
                 .firstName(updateEmployeeRequest.getFirstName())
                 .lastName(updateEmployeeRequest.getLastName())

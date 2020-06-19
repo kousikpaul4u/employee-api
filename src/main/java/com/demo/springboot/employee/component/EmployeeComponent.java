@@ -33,10 +33,10 @@ public class EmployeeComponent {
     @Autowired
     private UpdateEmployeeRequestToEmployeeEntityConverter updateEmployeeRequestToEmployeeEntityConverter;
 
-    public EmployeeListResponse findAllUsers() {
+    public EmployeeListResponse findAllEmployees() {
 
         try {
-            List<Employee> employeeList = genericService.findAllUsers();
+            List<Employee> employeeList = genericService.findAll();
             EmployeeListResponse employeeListResponse = EmployeeListResponse.builder()
                     .employeeList(employeeList)
                     .build();
@@ -75,6 +75,8 @@ public class EmployeeComponent {
         try {
             Employee employeeEntity = registerEmployeeRequestToEmployeeConverter.convert(registerEmployeeRequest);
             genericService.register(employeeEntity);
+        } catch (ServiceException e) {
+            throw e;
         } catch (Exception e) {
             LOG.error("Failed registering new employee with error: {} {}", e.getMessage(), e);
             throw new ComponentException(StatusConstants.HttpConstants.FAILED_TO_REGISTER_NEW_EMPLOYEE);
@@ -91,7 +93,7 @@ public class EmployeeComponent {
             throw e;
         } catch (Exception e) {
             LOG.error("Failed registering new employee with error: {} {}", e.getMessage(), e);
-            throw new ComponentException(StatusConstants.HttpConstants.FAILED_TO_REGISTER_NEW_EMPLOYEE);
+            throw new ComponentException(StatusConstants.HttpConstants.FAILED_TO_UPDATE_EMPLOYEE);
         }
 
     }
@@ -104,7 +106,7 @@ public class EmployeeComponent {
             throw e;
         } catch (Exception e) {
             LOG.error("Failed deleting employee by id: {} with error: {} {}", id, e, e.getMessage());
-            throw new ComponentException(StatusConstants.HttpConstants.FAILED_TO_REGISTER_NEW_EMPLOYEE);
+            throw new ComponentException(StatusConstants.HttpConstants.FAILED_TO_DELETE_EMPLOYEE);
         }
 
     }

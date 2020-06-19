@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 
 @RestController
@@ -37,11 +38,11 @@ public class EmployeeController implements ControllerSupport {
 
         try {
             LOG.info("Start getting all employee list");
-            EmployeeListResponse employeeListResponse = employeeComponent.findAllUsers();
+            EmployeeListResponse employeeListResponse = employeeComponent.findAllEmployees();
             LOG.info("Done getting all employee list");
             return success(employeeListResponse);
-        } catch (ServiceException e) {
-            LOG.error("Failed getting all employee list with error: {}", e, e.getMessage());
+        } catch (ComponentException e) {
+            LOG.error("Failed getting all employee list with error: {} {}", e, e.getMessage());
             return serverError(e.getStatus(), response);
         } catch (Exception e) {
             LOG.error("Failed getting all employee list with error: {} {}", e, e.getMessage());
@@ -64,9 +65,6 @@ public class EmployeeController implements ControllerSupport {
         } catch (ComponentException e) {
             LOG.error("Failed getting employee by id: {} with error: {} {}", id, e, e.getMessage());
             return serverError(e.getStatus(), response);
-        } catch (ServiceException e) {
-            LOG.error("Failed getting employee by id: {} with error: {} {}", id, e, e.getMessage());
-            return serverError(e.getStatus(), response);
         } catch (Exception e) {
             LOG.error("Failed getting employee by id: {} list with error: {} {}", id, e, e.getMessage());
             return serverError(response);
@@ -78,13 +76,16 @@ public class EmployeeController implements ControllerSupport {
     @ApiOperation(value = "Register one employee", notes = "Possible response codes: 0, 35001, 35999")
     @PreAuthorize("hasAuthority('ADMIN_USER')")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
-    public Response registerEmployee(@RequestBody RegisterEmployeeRequest registerEmployeeRequest, HttpServletResponse response) {
+    public Response registerEmployee(@Valid @RequestBody RegisterEmployeeRequest registerEmployeeRequest, HttpServletResponse response) {
 
         try {
             LOG.info("Start registering new employee");
             employeeComponent.register(registerEmployeeRequest);
             LOG.info("Done registering new employee");
             return success();
+        } catch (ComponentException e) {
+            LOG.error("Failed registering new employee with service error: {} {}", e, e.getMessage());
+            return serverError(e.getStatus(), response);
         } catch (ServiceException e) {
             LOG.error("Failed registering new employee with service error: {} {}", e, e.getMessage());
             return serverError(e.getStatus(), response);
@@ -99,7 +100,7 @@ public class EmployeeController implements ControllerSupport {
     @ApiOperation(value = "Update employee information", notes = "Possible response codes: 0, 35001, 35999")
     @PreAuthorize("hasAuthority('ADMIN_USER')")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
-    public Response updateEmployee(@RequestBody UpdateEmployeeRequest updateEmployeeRequest, HttpServletResponse response) {
+    public Response updateEmployee(@Valid @RequestBody UpdateEmployeeRequest updateEmployeeRequest, HttpServletResponse response) {
 
         try {
             LOG.info("Start updating employee information");
