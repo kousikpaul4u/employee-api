@@ -5,9 +5,10 @@ import com.demo.springboot.employee.constant.StatusConstants;
 import com.demo.springboot.employee.domain.Employee;
 import com.demo.springboot.employee.exception.ServiceException;
 import com.demo.springboot.employee.repository.EmployeeRepository;
-import com.demo.springboot.employee.service.GenericService;
+import com.demo.springboot.employee.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -16,7 +17,7 @@ import java.util.Optional;
 
 
 @Service
-public class GenericServiceImpl implements GenericService {
+public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -39,16 +40,31 @@ public class GenericServiceImpl implements GenericService {
     @Override
     public void register(Employee employee) {
         Optional<Employee> employeeOptional = findByUserName(employee.getUsername());
-        if(employeeOptional.isPresent()) {
+        if (employeeOptional.isPresent()) {
             throw new ServiceException(StatusConstants.HttpConstants.USERNAME_IS_ALREADY_EXIST);
         }
         employeeRepository.save(employee);
     }
 
     @Override
-    public void update(Employee employee) {
-        Optional<Employee> employeeOptional = findById(employee.getId());
-        if(employeeOptional.isPresent()) {
+    public void update(Employee requestEmployee) {
+        if(!StringUtils.isEmpty(requestEmployee.getUsername())) {
+            String username = requestEmployee.getUsername();
+            Optional<Employee> optionalEmployee = findByUserName(username);
+            if(optionalEmployee.isPresent()) {
+                throw new ServiceException(StatusConstants.HttpConstants.USERNAME_IS_ALREADY_EXIST);
+            }
+        }
+        Optional<Employee> employeeOptional = findById(requestEmployee.getId());
+        if (employeeOptional.isPresent()) {
+            Employee employee = employeeOptional.get();
+            employee.setUsername(StringUtils.isEmpty(requestEmployee.getUsername()) ? employee.getUsername() : requestEmployee.getUsername());
+            employee.setFirstName(StringUtils.isEmpty(requestEmployee.getFirstName()) ? employee.getFirstName() : requestEmployee.getFirstName());
+            employee.setLastName(StringUtils.isEmpty(requestEmployee.getLastName()) ? employee.getLastName() : requestEmployee.getLastName());
+            employee.setActiveStatus(requestEmployee.getActiveStatus());
+            employee.setDeletedDate(requestEmployee.getDeletedDate());
+            employee.setPassword(StringUtils.isEmpty(requestEmployee.getPassword()) ? employee.getPassword() : requestEmployee.getPassword());
+            employee.setRoles(requestEmployee.getRoles() == null || requestEmployee.getRoles().size() == 0 ? employee.getRoles() : requestEmployee.getRoles());
             employeeRepository.save(employee);
         } else {
             throw new ServiceException(StatusConstants.HttpConstants.EMPLOYEE_ID_IS_NOT_FOUND);
@@ -58,7 +74,7 @@ public class GenericServiceImpl implements GenericService {
     @Override
     public void delete(Long id) {
         Optional<Employee> employeeOptional = findById(id);
-        if(employeeOptional.isPresent()) {
+        if (employeeOptional.isPresent()) {
             Employee employee = employeeOptional.get();
             employee.setActiveStatus(ActiveStatus.INACTIVE.getDesc());
             employee.setDeletedDate(new Timestamp(new Date().getTime()));

@@ -74,7 +74,7 @@ public class EmployeeController implements ControllerSupport {
 
     @PostMapping(value = "/employee")
     @ApiOperation(value = "Register one employee", notes = "Possible response codes: 0, 35001, 35999")
-    @PreAuthorize("hasAuthority('ADMIN_USER')")
+    @PreAuthorize("hasAuthority('ADMIN_USER')  or hasAuthority('STANDARD_USER')")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public Response registerEmployee(@Valid @RequestBody RegisterEmployeeRequest registerEmployeeRequest, HttpServletResponse response) {
 
@@ -98,7 +98,7 @@ public class EmployeeController implements ControllerSupport {
 
     @PutMapping(value = "/employee")
     @ApiOperation(value = "Update employee information", notes = "Possible response codes: 0, 35001, 35999")
-    @PreAuthorize("hasAuthority('ADMIN_USER')")
+    @PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public Response updateEmployee(@Valid @RequestBody UpdateEmployeeRequest updateEmployeeRequest, HttpServletResponse response) {
 

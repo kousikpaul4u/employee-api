@@ -1,5 +1,6 @@
-package com.demo.springboot.employee.component;
+package com.demo.springboot.employee.unit.component;
 
+import com.demo.springboot.employee.component.EmployeeComponent;
 import com.demo.springboot.employee.constant.StatusConstants;
 import com.demo.springboot.employee.converter.RegisterEmployeeRequestToEmployeeConverter;
 import com.demo.springboot.employee.converter.UpdateEmployeeRequestToEmployeeEntityConverter;
@@ -12,7 +13,7 @@ import com.demo.springboot.employee.model.request.RoleRequest;
 import com.demo.springboot.employee.model.request.UpdateEmployeeRequest;
 import com.demo.springboot.employee.model.response.EmployeeListResponse;
 import com.demo.springboot.employee.model.response.EmployeeResponse;
-import com.demo.springboot.employee.service.impl.GenericServiceImpl;
+import com.demo.springboot.employee.service.impl.EmployeeServiceImpl;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,7 +34,7 @@ public class EmployeeComponentTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
     @Mock
-    private GenericServiceImpl genericService;
+    private EmployeeServiceImpl genericService;
     @Mock
     private RegisterEmployeeRequestToEmployeeConverter registerEmployeeRequestToEmployeeConverter;
     @Mock

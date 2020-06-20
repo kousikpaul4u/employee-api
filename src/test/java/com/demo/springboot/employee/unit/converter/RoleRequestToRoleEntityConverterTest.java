@@ -1,5 +1,6 @@
-package com.demo.springboot.employee.converter;
+package com.demo.springboot.employee.unit.converter;
 
+import com.demo.springboot.employee.converter.RoleRequestToRoleEntityConverter;
 import com.demo.springboot.employee.domain.Role;
 import com.demo.springboot.employee.model.request.RoleRequest;
 import org.junit.Assert;

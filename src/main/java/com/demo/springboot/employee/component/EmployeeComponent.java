@@ -10,7 +10,7 @@ import com.demo.springboot.employee.model.request.RegisterEmployeeRequest;
 import com.demo.springboot.employee.model.request.UpdateEmployeeRequest;
 import com.demo.springboot.employee.model.response.EmployeeListResponse;
 import com.demo.springboot.employee.model.response.EmployeeResponse;
-import com.demo.springboot.employee.service.impl.GenericServiceImpl;
+import com.demo.springboot.employee.service.impl.EmployeeServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class EmployeeComponent {
     private Logger LOG = LoggerFactory.getLogger(EmployeeComponent.class);
 
     @Autowired
-    private GenericServiceImpl genericService;
+    private EmployeeServiceImpl genericService;
 
     @Autowired
     private RegisterEmployeeRequestToEmployeeConverter registerEmployeeRequestToEmployeeConverter;

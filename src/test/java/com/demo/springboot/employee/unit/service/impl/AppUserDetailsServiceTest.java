@@ -1,8 +1,9 @@
-package com.demo.springboot.employee.service.impl;
+package com.demo.springboot.employee.unit.service.impl;
 
 import com.demo.springboot.employee.domain.Employee;
 import com.demo.springboot.employee.domain.Role;
 import com.demo.springboot.employee.repository.EmployeeRepository;
+import com.demo.springboot.employee.service.impl.AppUserDetailsService;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;

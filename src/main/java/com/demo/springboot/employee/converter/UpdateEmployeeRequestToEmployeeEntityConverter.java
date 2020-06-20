@@ -1,5 +1,6 @@
 package com.demo.springboot.employee.converter;
 
+import com.demo.springboot.employee.constant.ActiveStatus;
 import com.demo.springboot.employee.domain.Employee;
 import com.demo.springboot.employee.model.request.UpdateEmployeeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class UpdateEmployeeRequestToEmployeeEntityConverter implements Converter
                 .password(passwordEncoder.encode(updateEmployeeRequest.getPassword()))
                 .firstName(updateEmployeeRequest.getFirstName())
                 .lastName(updateEmployeeRequest.getLastName())
+                .activeStatus(ActiveStatus.ACTIVE.getDesc())
                 .roles(updateEmployeeRequest.getRoles()
                         .stream()
                         .map(role -> roleRequestToRoleEntityConverter.convert(role))

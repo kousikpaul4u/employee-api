@@ -1,10 +1,11 @@
-package com.demo.springboot.employee.service.impl;
+package com.demo.springboot.employee.unit.service.impl;
 
 import com.demo.springboot.employee.constant.StatusConstants;
 import com.demo.springboot.employee.domain.Employee;
 import com.demo.springboot.employee.domain.Role;
 import com.demo.springboot.employee.exception.ServiceException;
 import com.demo.springboot.employee.repository.EmployeeRepository;
+import com.demo.springboot.employee.service.impl.EmployeeServiceImpl;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,14 +21,14 @@ import java.util.List;
 import java.util.Optional;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GenericServiceImplTest {
+public class EmployeeServiceImplTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
     @Mock
     private EmployeeRepository employeeRepository;
     @InjectMocks
-    private GenericServiceImpl genericService;
+    private EmployeeServiceImpl genericService;
 
     @Test
     public void testFindByIdWithSuccess() {
@@ -188,12 +189,52 @@ public class GenericServiceImplTest {
                 .deletedDate(null)
                 .build();
 
+        Mockito.doReturn(Optional.empty()).when(employeeRepository).findByUsername("username");
+
         Mockito.doReturn(null).when(employeeRepository).save(employee);
         Mockito.doReturn(Optional.of(employee)).when(employeeRepository).findById(id);
 
         genericService.update(employee);
 
         Mockito.verify(employeeRepository, Mockito.times(1)).save(employee);
+
+    }
+
+    @Test
+    public void testUpdateWithServiceException() {
+        Long id = 1L;
+
+        List<Role> role = new ArrayList<Role>() {
+            {
+                add(new Role().builder()
+                        .roleName("ADMIN")
+                        .description("Desc")
+                        .id(1L)
+                        .build()
+                );
+            }
+        };
+        Employee employee = Employee.builder()
+                .activeStatus("active")
+                .firstName("first name")
+                .lastName("last name")
+                .password("password")
+                .username("username")
+                .id(1L)
+                .roles(role)
+                .deletedDate(null)
+                .build();
+        Mockito.doReturn(Optional.of(employee)).when(employeeRepository).findByUsername("username");
+
+        Mockito.doReturn(null).when(employeeRepository).save(employee);
+        Mockito.doReturn(Optional.empty()).when(employeeRepository).findById(id);
+
+        expectedException.expect(ServiceException.class);
+        expectedException.expectMessage(StatusConstants.HttpConstants.USERNAME_IS_ALREADY_EXIST.getDesc());
+
+        genericService.update(employee);
+
+        Mockito.verify(employeeRepository, Mockito.times(0)).save(employee);
 
     }
 
@@ -221,6 +262,7 @@ public class GenericServiceImplTest {
                 .roles(role)
                 .deletedDate(null)
                 .build();
+        Mockito.doReturn(Optional.empty()).when(employeeRepository).findByUsername("username");
 
         Mockito.doReturn(null).when(employeeRepository).save(employee);
         Mockito.doReturn(Optional.empty()).when(employeeRepository).findById(id);

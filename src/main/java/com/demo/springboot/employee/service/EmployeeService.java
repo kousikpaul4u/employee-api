@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface GenericService {
+public interface EmployeeService {
 
     Optional<Employee> findByUserName(String username);
 

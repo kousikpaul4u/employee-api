@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -17,7 +17,7 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class UpdateEmployeeRequest {
 
-    @NotBlank(message = "{id.not-null}")
+    @NotNull(message = "{id.not-null}")
     private Long id;
 
     private String firstName;

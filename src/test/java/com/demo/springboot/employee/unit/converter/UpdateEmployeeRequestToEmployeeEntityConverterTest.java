@@ -1,9 +1,11 @@
-package com.demo.springboot.employee.converter;
+package com.demo.springboot.employee.unit.converter;
 
+import com.demo.springboot.employee.converter.RoleRequestToRoleEntityConverter;
+import com.demo.springboot.employee.converter.UpdateEmployeeRequestToEmployeeEntityConverter;
 import com.demo.springboot.employee.domain.Employee;
 import com.demo.springboot.employee.domain.Role;
-import com.demo.springboot.employee.model.request.RegisterEmployeeRequest;
 import com.demo.springboot.employee.model.request.RoleRequest;
+import com.demo.springboot.employee.model.request.UpdateEmployeeRequest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RegisterEmployeeRequestToEmployeeConverterTest {
+public class UpdateEmployeeRequestToEmployeeEntityConverterTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -26,7 +28,7 @@ public class RegisterEmployeeRequestToEmployeeConverterTest {
     private RoleRequestToRoleEntityConverter roleRequestToRoleEntityConverter;
 
     @InjectMocks
-    private RegisterEmployeeRequestToEmployeeConverter registerEmployeeRequestToEmployeeConverter;
+    private UpdateEmployeeRequestToEmployeeEntityConverter updateEmployeeRequestToEmployeeEntityConverter;
 
     @Test
     public void testConvert() {
@@ -39,7 +41,7 @@ public class RegisterEmployeeRequestToEmployeeConverterTest {
                 );
             }
         };
-        RegisterEmployeeRequest registerEmployeeRequest = RegisterEmployeeRequest.builder()
+        UpdateEmployeeRequest registerEmployeeRequest = UpdateEmployeeRequest.builder()
                 .firstName("first name")
                 .lastName("last name")
                 .password("password")
@@ -55,7 +57,7 @@ public class RegisterEmployeeRequestToEmployeeConverterTest {
                 .build()
         ).when(roleRequestToRoleEntityConverter).convert(Mockito.any(RoleRequest.class));
 
-        Employee employee = registerEmployeeRequestToEmployeeConverter.convert(registerEmployeeRequest);
+        Employee employee = updateEmployeeRequestToEmployeeEntityConverter.convert(registerEmployeeRequest);
 
         Assert.assertEquals("first name", employee.getFirstName());
         Assert.assertEquals("last name", employee.getLastName());
