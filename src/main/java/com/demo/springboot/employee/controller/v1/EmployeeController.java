@@ -30,6 +30,13 @@ public class EmployeeController implements ControllerSupport {
     @Autowired
     private EmployeeComponent employeeComponent;
 
+    /**
+     * Get all activeStatus = 'active' employees
+     *
+     * @param response
+     * @return Response<EmployeeListResponse>
+     * @see EmployeeListResponse
+     */
     @GetMapping(value = "/employees")
     @ApiOperation(value = "Get all employees", notes = "Possible response codes: 0, 35001, 35999")
     @PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
@@ -51,8 +58,16 @@ public class EmployeeController implements ControllerSupport {
 
     }
 
+    /**
+     * Get activeStatus = 'active' or 'inactive' employee information by id
+     *
+     * @param id Long
+     * @param response
+     * @return Response<EmployeeResponse>
+     * @see EmployeeResponse
+     */
     @GetMapping(value = "/employee/{id}")
-    @ApiOperation(value = "Get all employee", notes = "Possible response codes: 0, 35001, 35999")
+    @ApiOperation(value = "Get employee by id", notes = "Possible response codes: 0, 35002, 35004, 35999")
     @PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public Response<EmployeeResponse> getEmployeeById(@PathVariable Long id, HttpServletResponse response) {
@@ -60,7 +75,7 @@ public class EmployeeController implements ControllerSupport {
         try {
             LOG.info("Start getting employee by id: {}", id);
             EmployeeResponse employeeListResponse = employeeComponent.findById(id);
-            LOG.info("Done getting all employee list");
+            LOG.info("Done getting employee by id");
             return success(employeeListResponse);
         } catch (ComponentException e) {
             LOG.error("Failed getting employee by id: {} with error: {} {}", id, e, e.getMessage());
@@ -72,8 +87,17 @@ public class EmployeeController implements ControllerSupport {
 
     }
 
+    /**
+     * Register new employee with mandatory fields
+     * Mandatory Fields: first_name, last_name, password, username, roles
+     *
+     * @param registerEmployeeRequest
+     * @param response
+     * @return
+     * @see RegisterEmployeeRequest
+     */
     @PostMapping(value = "/employee")
-    @ApiOperation(value = "Register one employee", notes = "Possible response codes: 0, 35001, 35999")
+    @ApiOperation(value = "Register new employee", notes = "Possible response codes: 0, 35003, 35007, 35998, 35999")
     @PreAuthorize("hasAuthority('ADMIN_USER')  or hasAuthority('STANDARD_USER')")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public Response registerEmployee(@Valid @RequestBody RegisterEmployeeRequest registerEmployeeRequest, HttpServletResponse response) {
@@ -96,8 +120,17 @@ public class EmployeeController implements ControllerSupport {
 
     }
 
+    /**
+     * Update employee information
+     * Mandatory Field: id
+     *
+     * @param updateEmployeeRequest
+     * @param response
+     * @return
+     * @see UpdateEmployeeRequest
+     */
     @PutMapping(value = "/employee")
-    @ApiOperation(value = "Update employee information", notes = "Possible response codes: 0, 35001, 35999")
+    @ApiOperation(value = "Update employee information", notes = "Possible response codes: 0, 35004, 35005, 35007, 35998, 35999")
     @PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public Response updateEmployee(@Valid @RequestBody UpdateEmployeeRequest updateEmployeeRequest, HttpServletResponse response) {
@@ -120,8 +153,16 @@ public class EmployeeController implements ControllerSupport {
 
     }
 
+    /**
+     * Delete an employee
+     * All delete will be soft delete, it will change the activeStatus="active" to "inactive"
+     *
+     * @param id Long
+     * @param response
+     * @return
+     */
     @DeleteMapping(value = "/employee/{id}")
-    @ApiOperation(value = "Delete employee data", notes = "Possible response codes: 0, 35001, 35999")
+    @ApiOperation(value = "Delete an employee", notes = "Possible response codes: 0, 35004, 35006, 35999")
     @PreAuthorize("hasAuthority('ADMIN_USER')")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public Response deleteEmployee(@PathVariable Long id, HttpServletResponse response) {

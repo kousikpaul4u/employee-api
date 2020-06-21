@@ -25,7 +25,7 @@ public class EmployeeComponent {
     private Logger LOG = LoggerFactory.getLogger(EmployeeComponent.class);
 
     @Autowired
-    private EmployeeServiceImpl genericService;
+    private EmployeeServiceImpl employeeServiceImpl;
 
     @Autowired
     private RegisterEmployeeRequestToEmployeeConverter registerEmployeeRequestToEmployeeConverter;
@@ -33,10 +33,16 @@ public class EmployeeComponent {
     @Autowired
     private UpdateEmployeeRequestToEmployeeEntityConverter updateEmployeeRequestToEmployeeEntityConverter;
 
+    /**
+     * Get active employee list
+     * @return EmployeeListResponse
+     * @see EmployeeListResponse
+     * @throws ComponentException
+     */
     public EmployeeListResponse findAllEmployees() {
 
         try {
-            List<Employee> employeeList = genericService.findAll();
+            List<Employee> employeeList = employeeServiceImpl.findAll();
             EmployeeListResponse employeeListResponse = EmployeeListResponse.builder()
                     .employeeList(employeeList)
                     .build();
@@ -48,10 +54,17 @@ public class EmployeeComponent {
 
     }
 
+    /**
+     * Get employee by id
+     * @param id
+     * @return
+     * @see EmployeeResponse
+     * @throws ComponentException
+     */
     public EmployeeResponse findById(Long id) {
 
         try {
-            Optional<Employee> employeeOptional = genericService.findById(id);
+            Optional<Employee> employeeOptional = employeeServiceImpl.findById(id);
             if (employeeOptional.isPresent()) {
                 EmployeeResponse employeeResponse = EmployeeResponse.builder()
                         .employee(employeeOptional.get())
@@ -70,11 +83,16 @@ public class EmployeeComponent {
 
     }
 
+    /**
+     * Register new employee
+     * @param registerEmployeeRequest
+     * @see RegisterEmployeeRequest
+     */
     public void register(RegisterEmployeeRequest registerEmployeeRequest) {
 
         try {
             Employee employeeEntity = registerEmployeeRequestToEmployeeConverter.convert(registerEmployeeRequest);
-            genericService.register(employeeEntity);
+            employeeServiceImpl.register(employeeEntity);
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
@@ -84,11 +102,16 @@ public class EmployeeComponent {
 
     }
 
+    /**
+     * Update existing employee
+     * @param updateEmployeeRequest
+     * @see UpdateEmployeeRequest
+     */
     public void update(UpdateEmployeeRequest updateEmployeeRequest) {
 
         try {
             Employee employeeEntity = updateEmployeeRequestToEmployeeEntityConverter.convert(updateEmployeeRequest);
-            genericService.update(employeeEntity);
+            employeeServiceImpl.update(employeeEntity);
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
@@ -98,10 +121,14 @@ public class EmployeeComponent {
 
     }
 
+    /**
+     * Delete by id
+     * @param id
+     */
     public void delete(Long id) {
 
         try {
-            genericService.delete(id);
+            employeeServiceImpl.delete(id);
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {

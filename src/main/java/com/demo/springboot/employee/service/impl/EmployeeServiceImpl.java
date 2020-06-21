@@ -22,21 +22,46 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    /**
+     * Find by username
+     * @param username
+     * @return
+     * @see Employee
+     * @throws ServiceException
+     */
     @Override
     public Optional<Employee> findByUserName(String username) {
         return employeeRepository.findByUsername(username);
     }
 
+    /**
+     * Find by id
+     * @param id
+     * @return
+     * @see Employee
+     * @throws ServiceException
+     */
     @Override
     public Optional<Employee> findById(Long id) {
         return employeeRepository.findById(id);
     }
 
+    /**
+     * Find all active employees
+     * @return
+     * @see Employee
+     */
     @Override
     public List<Employee> findAll() {
         return employeeRepository.findAllActiveEmployees();
     }
 
+    /**
+     * Save new employee if username not exists
+     * @param employee
+     * @see Employee
+     * @throws ServiceException
+     */
     @Override
     public void register(Employee employee) {
         Optional<Employee> employeeOptional = findByUserName(employee.getUsername());
@@ -46,6 +71,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.save(employee);
     }
 
+    /**
+     * Update employee if username unique
+     * @param requestEmployee
+     * @see Employee
+     * @throws ServiceException
+     */
     @Override
     public void update(Employee requestEmployee) {
         if(!StringUtils.isEmpty(requestEmployee.getUsername())) {
@@ -71,6 +102,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
 
+    /**
+     * Delete by id
+     * It is a soft delete
+     * It will change the activeStatus = "active" to "inactive"
+     * @param id
+     * @throws ServiceException
+     */
     @Override
     public void delete(Long id) {
         Optional<Employee> employeeOptional = findById(id);
